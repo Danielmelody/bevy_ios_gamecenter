@@ -267,6 +267,22 @@ impl IosGCScoreSubmitResponse {
     }
 }
 
+#[derive(Event, Debug, Clone)]
+pub enum IosGCLeaderboardFetchScoresResponse {
+    Done(i32),
+    Error(String),
+}
+
+impl IosGCLeaderboardFetchScoresResponse {
+    fn done(score: i32) -> Self {
+        Self::Done(score)
+    }
+
+    fn error(e: String) -> Self {
+        Self::Error(e)
+    }
+}
+
 /// Expected event data in response to [`delete_savegame`] method call.
 /// See Event [`IosGamecenterEvents`]
 #[derive(Event, Debug, Clone)]

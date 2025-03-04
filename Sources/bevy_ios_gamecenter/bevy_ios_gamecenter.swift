@@ -26,6 +26,9 @@ public func receive_achievement_reset(_ request: Int64, _ response: IosGCAchieve
 public func receive_leaderboard_score(_ request: Int64, _ response: IosGCScoreSubmitResponse) {
     __swift_bridge__$receive_leaderboard_score(request, {response.isOwned = false; return response.ptr;}())
 }
+public func receive_fetch_leaderboard_score(_ request: Int64, _ response: IosGCLeaderboardFetchScoresResponse) {
+    __swift_bridge__$receive_fetch_leaderboard_score(request, {response.isOwned = false; return response.ptr;}())
+}
 public func receive_items_for_signature_verification(_ request: Int64, _ response: IosGCFetchItemsForSignatureVerificationResponse) {
     __swift_bridge__$receive_items_for_signature_verification(request, {response.isOwned = false; return response.ptr;}())
 }
@@ -93,6 +96,11 @@ public func __swift_bridge__reset_achievements (_ request: Int64) {
 @_cdecl("__swift_bridge__$leaderboards_score")
 public func __swift_bridge__leaderboards_score (_ request: Int64, _ id: UnsafeMutableRawPointer, _ score: Int64, _ context: Int64) {
     leaderboards_score(request: request, id: RustString(ptr: id), score: score, context: context)
+}
+
+@_cdecl("__swift_bridge__$fetch_leaderboard_score")
+public func __swift_bridge__fetch_leaderboard_score (_ request: Int64, _ id: UnsafeMutableRawPointer) {
+    fetch_leaderboard_score(request: request, id: RustString(ptr: id))
 }
 
 @_cdecl("__swift_bridge__$fetch_signature")
@@ -513,6 +521,90 @@ extension IosGCDeleteSaveGameResponse: Vectorizable {
 
     public static func vecOfSelfLen(vecPtr: UnsafeMutableRawPointer) -> UInt {
         __swift_bridge__$Vec_IosGCDeleteSaveGameResponse$len(vecPtr)
+    }
+}
+
+
+public class IosGCLeaderboardFetchScoresResponse: IosGCLeaderboardFetchScoresResponseRefMut {
+    var isOwned: Bool = true
+
+    public override init(ptr: UnsafeMutableRawPointer) {
+        super.init(ptr: ptr)
+    }
+
+    deinit {
+        if isOwned {
+            __swift_bridge__$IosGCLeaderboardFetchScoresResponse$_free(ptr)
+        }
+    }
+}
+extension IosGCLeaderboardFetchScoresResponse {
+    class public func done(_ score: Int32) -> IosGCLeaderboardFetchScoresResponse {
+        IosGCLeaderboardFetchScoresResponse(ptr: __swift_bridge__$IosGCLeaderboardFetchScoresResponse$done(score))
+    }
+
+    class public func error<GenericIntoRustString: IntoRustString>(_ e: GenericIntoRustString) -> IosGCLeaderboardFetchScoresResponse {
+        IosGCLeaderboardFetchScoresResponse(ptr: __swift_bridge__$IosGCLeaderboardFetchScoresResponse$error({ let rustString = e.intoRustString(); rustString.isOwned = false; return rustString.ptr }()))
+    }
+}
+public class IosGCLeaderboardFetchScoresResponseRefMut: IosGCLeaderboardFetchScoresResponseRef {
+    public override init(ptr: UnsafeMutableRawPointer) {
+        super.init(ptr: ptr)
+    }
+}
+public class IosGCLeaderboardFetchScoresResponseRef {
+    var ptr: UnsafeMutableRawPointer
+
+    public init(ptr: UnsafeMutableRawPointer) {
+        self.ptr = ptr
+    }
+}
+extension IosGCLeaderboardFetchScoresResponse: Vectorizable {
+    public static func vecOfSelfNew() -> UnsafeMutableRawPointer {
+        __swift_bridge__$Vec_IosGCLeaderboardFetchScoresResponse$new()
+    }
+
+    public static func vecOfSelfFree(vecPtr: UnsafeMutableRawPointer) {
+        __swift_bridge__$Vec_IosGCLeaderboardFetchScoresResponse$drop(vecPtr)
+    }
+
+    public static func vecOfSelfPush(vecPtr: UnsafeMutableRawPointer, value: IosGCLeaderboardFetchScoresResponse) {
+        __swift_bridge__$Vec_IosGCLeaderboardFetchScoresResponse$push(vecPtr, {value.isOwned = false; return value.ptr;}())
+    }
+
+    public static func vecOfSelfPop(vecPtr: UnsafeMutableRawPointer) -> Optional<Self> {
+        let pointer = __swift_bridge__$Vec_IosGCLeaderboardFetchScoresResponse$pop(vecPtr)
+        if pointer == nil {
+            return nil
+        } else {
+            return (IosGCLeaderboardFetchScoresResponse(ptr: pointer!) as! Self)
+        }
+    }
+
+    public static func vecOfSelfGet(vecPtr: UnsafeMutableRawPointer, index: UInt) -> Optional<IosGCLeaderboardFetchScoresResponseRef> {
+        let pointer = __swift_bridge__$Vec_IosGCLeaderboardFetchScoresResponse$get(vecPtr, index)
+        if pointer == nil {
+            return nil
+        } else {
+            return IosGCLeaderboardFetchScoresResponseRef(ptr: pointer!)
+        }
+    }
+
+    public static func vecOfSelfGetMut(vecPtr: UnsafeMutableRawPointer, index: UInt) -> Optional<IosGCLeaderboardFetchScoresResponseRefMut> {
+        let pointer = __swift_bridge__$Vec_IosGCLeaderboardFetchScoresResponse$get_mut(vecPtr, index)
+        if pointer == nil {
+            return nil
+        } else {
+            return IosGCLeaderboardFetchScoresResponseRefMut(ptr: pointer!)
+        }
+    }
+
+    public static func vecOfSelfAsPtr(vecPtr: UnsafeMutableRawPointer) -> UnsafePointer<IosGCLeaderboardFetchScoresResponseRef> {
+        UnsafePointer<IosGCLeaderboardFetchScoresResponseRef>(OpaquePointer(__swift_bridge__$Vec_IosGCLeaderboardFetchScoresResponse$as_ptr(vecPtr)))
+    }
+
+    public static func vecOfSelfLen(vecPtr: UnsafeMutableRawPointer) -> UInt {
+        __swift_bridge__$Vec_IosGCLeaderboardFetchScoresResponse$len(vecPtr)
     }
 }
 

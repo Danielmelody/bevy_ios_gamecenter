@@ -11,12 +11,14 @@ use crate::{
     plugin::IosGamecenterEvents, IosGCAchievement, IosGCAchievementProgressResponse,
     IosGCAchievementsResetResponse, IosGCAuthResult, IosGCDeleteSaveGameResponse,
     IosGCFetchItemsForSignatureVerification, IosGCFetchItemsForSignatureVerificationResponse,
-    IosGCLoadGamesResponse, IosGCPlayer, IosGCResolvedConflictsResponse, IosGCSaveGame,
-    IosGCSaveGames, IosGCSaveGamesResponse, IosGCSavedGameResponse, IosGCScoreSubmitResponse,
+    IosGCLeaderboardFetchScoresResponse, IosGCLoadGamesResponse, IosGCPlayer,
+    IosGCResolvedConflictsResponse, IosGCSaveGame, IosGCSaveGames, IosGCSaveGamesResponse,
+    IosGCSavedGameResponse, IosGCScoreSubmitResponse,
 };
 
 #[swift_bridge::bridge]
 mod ffi {
+
     extern "Rust" {
         type IosGCPlayer;
 
@@ -99,6 +101,13 @@ mod ffi {
         #[swift_bridge(associated_to = IosGCScoreSubmitResponse)]
         fn error(e: String) -> IosGCScoreSubmitResponse;
 
+        type IosGCLeaderboardFetchScoresResponse;
+
+        #[swift_bridge(associated_to = IosGCLeaderboardFetchScoresResponse)]
+        fn done(score: i32) -> IosGCLeaderboardFetchScoresResponse;
+        #[swift_bridge(associated_to = IosGCLeaderboardFetchScoresResponse)]
+        fn error(e: String) -> IosGCLeaderboardFetchScoresResponse;
+
         type IosGCDeleteSaveGameResponse;
 
         #[swift_bridge(associated_to = IosGCDeleteSaveGameResponse)]
@@ -148,6 +157,10 @@ mod ffi {
         fn receive_achievement_progress(request: i64, response: IosGCAchievementProgressResponse);
         fn receive_achievement_reset(request: i64, response: IosGCAchievementsResetResponse);
         fn receive_leaderboard_score(request: i64, response: IosGCScoreSubmitResponse);
+        fn receive_fetch_leaderboard_score(
+            request: i64,
+            response: IosGCLeaderboardFetchScoresResponse,
+        );
         fn receive_items_for_signature_verification(
             request: i64,
             response: IosGCFetchItemsForSignatureVerificationResponse,
@@ -172,6 +185,7 @@ mod ffi {
         pub fn achievement_progress(request: i64, id: String, progress: f64);
         pub fn reset_achievements(request: i64);
         pub fn leaderboards_score(request: i64, id: String, score: i64, context: i64);
+        pub fn fetch_leaderboard_score(request: i64, id: String);
         pub fn fetch_signature(request: i64);
     }
 }
@@ -263,6 +277,18 @@ fn receive_leaderboard_score(request: i64, response: IosGCScoreSubmitResponse) {
         .as_ref()
         .unwrap()
         .send(IosGamecenterEvents::LeaderboardScoreSubmitted((
+            request, response,
+        )));
+}
+
+fn receive_fetch_leaderboard_score(request: i64, response: IosGCLeaderboardFetchScoresResponse) {
+    #[cfg(target_os = "ios")]
+    SENDER
+        .get()
+        .unwrap()
+        .as_ref()
+        .unwrap()
+        .send(IosGamecenterEvents::LeaderboardScoreFetched((
             request, response,
         )));
 }

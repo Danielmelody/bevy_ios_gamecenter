@@ -4,8 +4,9 @@ use bevy_ecs::prelude::*;
 use crate::{
     request, IosGCAchievementProgressResponse, IosGCAchievementsResetResponse, IosGCAuthResult,
     IosGCDeleteSaveGameResponse, IosGCFetchItemsForSignatureVerificationResponse,
-    IosGCLoadGamesResponse, IosGCPlayer, IosGCResolvedConflictsResponse, IosGCSaveGames,
-    IosGCSaveGamesResponse, IosGCSavedGameResponse, IosGCScoreSubmitResponse,
+    IosGCLeaderboardFetchScoresResponse, IosGCLoadGamesResponse, IosGCPlayer,
+    IosGCResolvedConflictsResponse, IosGCSaveGames, IosGCSaveGamesResponse, IosGCSavedGameResponse,
+    IosGCScoreSubmitResponse,
 };
 
 /// All events for communication from native iOS (Swift) side to Rust/Bevy
@@ -29,6 +30,8 @@ pub enum IosGamecenterEvents {
     AchievementsReset((i64, IosGCAchievementsResetResponse)),
     /// Triggered by calls to [`leaderboards_score`][crate::leaderboards_score]
     LeaderboardScoreSubmitted((i64, IosGCScoreSubmitResponse)),
+    /// Triggered by calls to [`fetch_leaderboard_scores`][crate::fetch_leaderboard_scores]
+    LeaderboardScoreFetched((i64, IosGCLeaderboardFetchScoresResponse)),
     /// Triggered by calls to [`fetch_signature`][crate::fetch_signature]
     ItemsForSignatureVerification((i64, IosGCFetchItemsForSignatureVerificationResponse)),
     /// Triggered by calls to [`fetch_save_games`][crate::fetch_save_games] or [`save_game`][crate::save_game]

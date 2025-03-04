@@ -195,6 +195,20 @@ public func leaderboards_score(request: Int64, id:RustString, score:Int64, conte
     }
 }
 
+public func fetch_leaderboard_score(request: Int64, id: RustString) {
+    Task {
+        do{
+            let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: [id.toString()]);
+            for leaderboard in leaderboard {
+                let entry = try await leaderboard.loadEntries(for:[GKLocalPlayer.local], timeScope:GKLeaderboard.TimeScope.allTime)
+                receive_fetch_leaderboard_score(request, IosGCLeaderboardFetchScoresResponse.done(Int32(entry.0?.score ?? 0)))
+            }
+        } catch {
+            receive_fetch_leaderboard_score(request, IosGCLeaderboardFetchScoresResponse.error(error.localizedDescription))
+        }
+    }
+}
+
 public func trigger_view(state: Int32) {
     GKAccessPoint.shared.trigger(state: GKGameCenterViewControllerState(rawValue: Int(state)) ?? GKGameCenterViewControllerState.default){
         //TODO: no idea why this gets never called

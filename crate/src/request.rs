@@ -9,9 +9,9 @@ use bevy_ecs::{
 use crate::{
     IosGCAchievementProgressResponse, IosGCAchievementsResetResponse, IosGCAuthResult,
     IosGCDeleteSaveGameResponse, IosGCFetchItemsForSignatureVerificationResponse,
-    IosGCLoadGamesResponse, IosGCPlayer, IosGCResolvedConflictsResponse, IosGCSaveGame,
-    IosGCSaveGames, IosGCSaveGamesResponse, IosGCSavedGameResponse, IosGCScoreSubmitResponse,
-    IosGamecenterEvents,
+    IosGCLeaderboardFetchScoresResponse, IosGCLoadGamesResponse, IosGCPlayer,
+    IosGCResolvedConflictsResponse, IosGCSaveGame, IosGCSaveGames, IosGCSaveGamesResponse,
+    IosGCSavedGameResponse, IosGCScoreSubmitResponse, IosGamecenterEvents,
 };
 
 #[derive(Resource, Default)]
@@ -62,6 +62,10 @@ struct RequestAchievementsReset;
 #[derive(Component)]
 #[component(storage = "SparseSet")]
 struct RequestLeaderboardScore;
+
+#[derive(Component)]
+#[component(storage = "SparseSet")]
+struct RequestLeaderboardFetchScores;
 
 #[derive(Component)]
 struct RequestId(i64);
@@ -224,6 +228,20 @@ impl BevyIosGamecenter<'_, '_> {
             RequestEntity,
         )))
     }
+
+    pub fn fetch_leaderboard_score(
+        &mut self,
+        leaderboard_id: String,
+    ) -> BevyIosGCRequestBuilder<'_, IosGCLeaderboardFetchScoresResponse> {
+        let id = self.res.request_id;
+        self.res.request_id += 1;
+        crate::methods::fetch_leaderboard_score(id, leaderboard_id);
+        BevyIosGCRequestBuilder::new(self.commands.spawn((
+            RequestLeaderboardFetchScores,
+            RequestId(id),
+            RequestEntity,
+        )))
+    }
 }
 
 pub struct BevyIosGCRequestBuilder<'a, T>(EntityCommands<'a>, PhantomData<T>);
@@ -287,6 +305,10 @@ fn process_events(
     request_achievement_progress: Query<(Entity, &RequestId), With<RequestAchievementProgress>>,
     request_achievements_reset: Query<(Entity, &RequestId), With<RequestAchievementsReset>>,
     request_leaderboard_score: Query<(Entity, &RequestId), With<RequestLeaderboardScore>>,
+    request_fetch_leaderboard_score: Query<
+        (Entity, &RequestId),
+        With<RequestLeaderboardFetchScores>,
+    >,
 ) {
     for e in events.read() {
         match e {
@@ -408,6 +430,13 @@ fn process_events(
                             ec.remove::<RequestId>();
                         }
                         break;
+                    }
+                }
+            }
+            IosGamecenterEvents::LeaderboardScoreFetched((r, response)) => {
+                for (e, id) in &request_fetch_leaderboard_score {
+                    if id.0 == *r {
+                        commands.trigger_targets(response.clone(), e);
                     }
                 }
             }

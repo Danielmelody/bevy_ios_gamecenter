@@ -103,6 +103,13 @@ pub fn leaderboards_score(request: i64, id: String, score: i64, context: i64) {
     native::leaderboards_score(request, id, score, context);
 }
 
+/// Fetches the score of a leaderboard
+/// Expected to be confirmed with [`IosGamecenterEvents::LeaderboardScoreFetched`][crate::IosGamecenterEvents::LeaderboardScoreFetched] event
+pub fn fetch_leaderboard_score(request: i64, id: String) {
+    #[cfg(target_os = "ios")]
+    native::fetch_leaderboard_score(request, id);
+}
+
 /// Opens Gamecenter View to a specific [`IosGCViewState`]
 ///
 /// ## Note
