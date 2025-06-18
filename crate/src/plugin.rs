@@ -4,7 +4,7 @@ use bevy_ecs::prelude::*;
 use crate::{
     request, IosGCAchievementProgressResponse, IosGCAchievementsResetResponse, IosGCAuthResult,
     IosGCDeleteSaveGameResponse, IosGCFetchItemsForSignatureVerificationResponse,
-    IosGCLeaderboardFetchScoresResponse, IosGCLoadGamesResponse, IosGCPlayer,
+    IosGCLeaderboardFetchScoresResponse, IosGCLeaderboardFetchScoreRangeResponse, IosGCLoadGamesResponse, IosGCPlayer,
     IosGCResolvedConflictsResponse, IosGCSaveGames, IosGCSaveGamesResponse, IosGCSavedGameResponse,
     IosGCScoreSubmitResponse,
 };
@@ -28,10 +28,12 @@ pub enum IosGamecenterEvents {
     AchievementProgress((i64, IosGCAchievementProgressResponse)),
     /// Triggered by calls to [`achievements_reset`][crate::achievements_reset]
     AchievementsReset((i64, IosGCAchievementsResetResponse)),
-    /// Triggered by calls to [`leaderboards_score`][crate::leaderboards_score]
+    /// Triggered by calls to [`submit_leaderboards_score`][crate::submit_leaderboards_score]
     LeaderboardScoreSubmitted((i64, IosGCScoreSubmitResponse)),
     /// Triggered by calls to [`fetch_leaderboard_scores`][crate::fetch_leaderboard_scores]
     LeaderboardScoreFetched((i64, IosGCLeaderboardFetchScoresResponse)),
+    /// Triggered by calls to [`fetch_leaderboard_score_range`][crate::fetch_leaderboard_score_range]
+    LeaderboardScoreRangeFetched((i64, IosGCLeaderboardFetchScoreRangeResponse)),
     /// Triggered by calls to [`fetch_signature`][crate::fetch_signature]
     ItemsForSignatureVerification((i64, IosGCFetchItemsForSignatureVerificationResponse)),
     /// Triggered by calls to [`fetch_save_games`][crate::fetch_save_games] or [`save_game`][crate::save_game]

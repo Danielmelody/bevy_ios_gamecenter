@@ -9,14 +9,23 @@ use bevy_ecs::{
 use crate::{
     IosGCAchievementProgressResponse, IosGCAchievementsResetResponse, IosGCAuthResult,
     IosGCDeleteSaveGameResponse, IosGCFetchItemsForSignatureVerificationResponse,
-    IosGCLeaderboardFetchScoresResponse, IosGCLoadGamesResponse, IosGCPlayer,
-    IosGCResolvedConflictsResponse, IosGCSaveGame, IosGCSaveGames, IosGCSaveGamesResponse,
-    IosGCSavedGameResponse, IosGCScoreSubmitResponse, IosGamecenterEvents,
+    IosGCLeaderboardFetchScoreRangeResponse, IosGCLeaderboardFetchScoresResponse,
+    IosGCLoadGamesResponse, IosGCPlayer, IosGCResolvedConflictsResponse, IosGCSaveGame,
+    IosGCSaveGames, IosGCSaveGamesResponse, IosGCSavedGameResponse, IosGCScoreSubmitResponse,
+    IosGamecenterEvents,
 };
 
 #[derive(Resource, Default)]
 struct BevyIosGamecenterState {
     request_id: i64,
+}
+
+impl BevyIosGamecenterState {
+    fn request_id(&mut self) -> i64 {
+        let id = self.request_id;
+        self.request_id += 1;
+        id
+    }
 }
 
 #[derive(Component)]
@@ -68,6 +77,10 @@ struct RequestLeaderboardScore;
 struct RequestLeaderboardFetchScores;
 
 #[derive(Component)]
+#[component(storage = "SparseSet")]
+struct RequestLeaderboardFetchScoreRange;
+
+#[derive(Component)]
 struct RequestId(i64);
 
 #[derive(Component)]
@@ -82,8 +95,7 @@ pub struct BevyIosGamecenter<'w, 's> {
 
 impl BevyIosGamecenter<'_, '_> {
     pub fn authenticate(&mut self) -> BevyIosGCRequestBuilder<'_, IosGCAuthResult> {
-        let id = self.res.request_id;
-        self.res.request_id += 1;
+        let id = self.res.request_id();
         crate::methods::authenticate(id);
         BevyIosGCRequestBuilder::new(self.commands.spawn((
             RequestAuthentication,
@@ -93,8 +105,7 @@ impl BevyIosGamecenter<'_, '_> {
     }
 
     pub fn request_player(&mut self) -> BevyIosGCRequestBuilder<'_, IosGCPlayer> {
-        let id = self.res.request_id;
-        self.res.request_id += 1;
+        let id = self.res.request_id();
         crate::methods::request_player(id);
         BevyIosGCRequestBuilder::new(self.commands.spawn((
             RequestPlayer,
@@ -104,8 +115,7 @@ impl BevyIosGamecenter<'_, '_> {
     }
 
     pub fn fetch_save_games(&mut self) -> BevyIosGCRequestBuilder<'_, IosGCSaveGamesResponse> {
-        let id = self.res.request_id;
-        self.res.request_id += 1;
+        let id = self.res.request_id();
         crate::methods::fetch_save_games(id);
         BevyIosGCRequestBuilder::new(self.commands.spawn((
             RequestSaveGames,
@@ -119,8 +129,7 @@ impl BevyIosGamecenter<'_, '_> {
         name: String,
         data: &[u8],
     ) -> BevyIosGCRequestBuilder<'_, IosGCSavedGameResponse> {
-        let id = self.res.request_id;
-        self.res.request_id += 1;
+        let id = self.res.request_id();
         crate::methods::save_game(id, name, data);
         BevyIosGCRequestBuilder::new(self.commands.spawn((
             RequestSaveGame,
@@ -133,8 +142,7 @@ impl BevyIosGamecenter<'_, '_> {
         &mut self,
         game: IosGCSaveGame,
     ) -> BevyIosGCRequestBuilder<'_, IosGCLoadGamesResponse> {
-        let id = self.res.request_id;
-        self.res.request_id += 1;
+        let id = self.res.request_id();
         crate::methods::load_game(id, game);
         BevyIosGCRequestBuilder::new(self.commands.spawn((
             RequestLoadGame,
@@ -148,8 +156,7 @@ impl BevyIosGamecenter<'_, '_> {
         save_games: IosGCSaveGames,
         data: &[u8],
     ) -> BevyIosGCRequestBuilder<'_, IosGCResolvedConflictsResponse> {
-        let id = self.res.request_id;
-        self.res.request_id += 1;
+        let id = self.res.request_id();
         crate::methods::resolve_conflicting_games(id, save_games, data);
         BevyIosGCRequestBuilder::new(self.commands.spawn((
             RequestResolveConflicts,
@@ -162,8 +169,7 @@ impl BevyIosGamecenter<'_, '_> {
         &mut self,
         name: String,
     ) -> BevyIosGCRequestBuilder<'_, IosGCDeleteSaveGameResponse> {
-        let id = self.res.request_id;
-        self.res.request_id += 1;
+        let id = self.res.request_id();
         crate::methods::delete_savegame(id, name);
         BevyIosGCRequestBuilder::new(self.commands.spawn((
             RequestDeleteSavegame,
@@ -175,8 +181,7 @@ impl BevyIosGamecenter<'_, '_> {
     pub fn fetch_signature(
         &mut self,
     ) -> BevyIosGCRequestBuilder<'_, IosGCFetchItemsForSignatureVerificationResponse> {
-        let id = self.res.request_id;
-        self.res.request_id += 1;
+        let id = self.res.request_id();
         crate::methods::fetch_signature(id);
         BevyIosGCRequestBuilder::new(self.commands.spawn((
             RequestFetchSignature,
@@ -190,8 +195,7 @@ impl BevyIosGamecenter<'_, '_> {
         achievement_id: String,
         progress: f64,
     ) -> BevyIosGCRequestBuilder<'_, IosGCAchievementProgressResponse> {
-        let id = self.res.request_id;
-        self.res.request_id += 1;
+        let id = self.res.request_id();
         crate::methods::achievement_progress(id, achievement_id, progress);
         BevyIosGCRequestBuilder::new(self.commands.spawn((
             RequestAchievementProgress,
@@ -203,8 +207,7 @@ impl BevyIosGamecenter<'_, '_> {
     pub fn achievements_reset(
         &mut self,
     ) -> BevyIosGCRequestBuilder<'_, IosGCAchievementsResetResponse> {
-        let id = self.res.request_id;
-        self.res.request_id += 1;
+        let id = self.res.request_id();
         crate::methods::achievements_reset(id);
         BevyIosGCRequestBuilder::new(self.commands.spawn((
             RequestAchievementsReset,
@@ -213,15 +216,14 @@ impl BevyIosGamecenter<'_, '_> {
         )))
     }
 
-    pub fn leaderboards_score(
+    pub fn submit_leaderboards_score(
         &mut self,
         leaderboard_id: String,
         score: i64,
         context: i64,
     ) -> BevyIosGCRequestBuilder<'_, IosGCScoreSubmitResponse> {
-        let id = self.res.request_id;
-        self.res.request_id += 1;
-        crate::methods::leaderboards_score(id, leaderboard_id, score, context);
+        let id = self.res.request_id();
+        crate::methods::submit_leaderboards_score(id, leaderboard_id, score, context);
         BevyIosGCRequestBuilder::new(self.commands.spawn((
             RequestLeaderboardScore,
             RequestId(id),
@@ -233,14 +235,32 @@ impl BevyIosGamecenter<'_, '_> {
         &mut self,
         leaderboard_id: String,
     ) -> BevyIosGCRequestBuilder<'_, IosGCLeaderboardFetchScoresResponse> {
-        let id = self.res.request_id;
-        self.res.request_id += 1;
+        let id = self.res.request_id();
         crate::methods::fetch_leaderboard_score(id, leaderboard_id);
-        BevyIosGCRequestBuilder::new(self.commands.spawn((
-            RequestLeaderboardFetchScores,
-            RequestId(id),
-            RequestEntity,
-        )))
+        let entity = self
+            .commands
+            .spawn((RequestEntity, RequestId(id), RequestLeaderboardFetchScores))
+            .id();
+        BevyIosGCRequestBuilder::new(self.commands.entity(entity))
+    }
+
+    pub fn fetch_leaderboard_score_range(
+        &mut self,
+        leaderboard_name: String,
+        min: i32,
+        max: i32,
+    ) -> BevyIosGCRequestBuilder<'_, IosGCLeaderboardFetchScoreRangeResponse> {
+        let id = self.res.request_id();
+        crate::methods::fetch_leaderboard_score_range(id, leaderboard_name, min, max);
+        let entity = self
+            .commands
+            .spawn((
+                RequestEntity,
+                RequestId(id),
+                RequestLeaderboardFetchScoreRange,
+            ))
+            .id();
+        BevyIosGCRequestBuilder::new(self.commands.entity(entity))
     }
 }
 
@@ -308,6 +328,10 @@ fn process_events(
     request_fetch_leaderboard_score: Query<
         (Entity, &RequestId),
         With<RequestLeaderboardFetchScores>,
+    >,
+    request_fetch_leaderboard_score_range: Query<
+        (Entity, &RequestId),
+        With<RequestLeaderboardFetchScoreRange>,
     >,
 ) {
     for e in events.read() {
@@ -437,6 +461,21 @@ fn process_events(
                 for (e, id) in &request_fetch_leaderboard_score {
                     if id.0 == *r {
                         commands.trigger_targets(response.clone(), e);
+                        if let Some(mut ec) = commands.get_entity(e) {
+                            ec.remove::<RequestId>();
+                        }
+                        break;
+                    }
+                }
+            }
+            IosGamecenterEvents::LeaderboardScoreRangeFetched((r, response)) => {
+                for (e, id) in &request_fetch_leaderboard_score_range {
+                    if id.0 == *r {
+                        commands.trigger_targets(response.clone(), e);
+                        if let Some(mut ec) = commands.get_entity(e) {
+                            ec.remove::<RequestId>();
+                        }
+                        break;
                     }
                 }
             }

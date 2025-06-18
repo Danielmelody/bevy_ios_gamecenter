@@ -61,6 +61,30 @@ void* __swift_bridge__$Vec_IosGCDeleteSaveGameResponse$get_mut(void* vec_ptr, ui
 uintptr_t __swift_bridge__$Vec_IosGCDeleteSaveGameResponse$len(void* vec_ptr);
 void* __swift_bridge__$Vec_IosGCDeleteSaveGameResponse$as_ptr(void* vec_ptr);
 
+typedef struct IosGCLeaderboardFetchScoreRangeResponse IosGCLeaderboardFetchScoreRangeResponse;
+void __swift_bridge__$IosGCLeaderboardFetchScoreRangeResponse$_free(void* self);
+
+void* __swift_bridge__$Vec_IosGCLeaderboardFetchScoreRangeResponse$new(void);
+void __swift_bridge__$Vec_IosGCLeaderboardFetchScoreRangeResponse$drop(void* vec_ptr);
+void __swift_bridge__$Vec_IosGCLeaderboardFetchScoreRangeResponse$push(void* vec_ptr, void* item_ptr);
+void* __swift_bridge__$Vec_IosGCLeaderboardFetchScoreRangeResponse$pop(void* vec_ptr);
+void* __swift_bridge__$Vec_IosGCLeaderboardFetchScoreRangeResponse$get(void* vec_ptr, uintptr_t index);
+void* __swift_bridge__$Vec_IosGCLeaderboardFetchScoreRangeResponse$get_mut(void* vec_ptr, uintptr_t index);
+uintptr_t __swift_bridge__$Vec_IosGCLeaderboardFetchScoreRangeResponse$len(void* vec_ptr);
+void* __swift_bridge__$Vec_IosGCLeaderboardFetchScoreRangeResponse$as_ptr(void* vec_ptr);
+
+typedef struct IosGCLeaderboardScore IosGCLeaderboardScore;
+void __swift_bridge__$IosGCLeaderboardScore$_free(void* self);
+
+void* __swift_bridge__$Vec_IosGCLeaderboardScore$new(void);
+void __swift_bridge__$Vec_IosGCLeaderboardScore$drop(void* vec_ptr);
+void __swift_bridge__$Vec_IosGCLeaderboardScore$push(void* vec_ptr, void* item_ptr);
+void* __swift_bridge__$Vec_IosGCLeaderboardScore$pop(void* vec_ptr);
+void* __swift_bridge__$Vec_IosGCLeaderboardScore$get(void* vec_ptr, uintptr_t index);
+void* __swift_bridge__$Vec_IosGCLeaderboardScore$get_mut(void* vec_ptr, uintptr_t index);
+uintptr_t __swift_bridge__$Vec_IosGCLeaderboardScore$len(void* vec_ptr);
+void* __swift_bridge__$Vec_IosGCLeaderboardScore$as_ptr(void* vec_ptr);
+
 typedef struct IosGCLeaderboardFetchScoresResponse IosGCLeaderboardFetchScoresResponse;
 void __swift_bridge__$IosGCLeaderboardFetchScoresResponse$_free(void* self);
 
@@ -213,8 +237,11 @@ void* __swift_bridge__$IosGCAchievementsResetResponse$done(void);
 void* __swift_bridge__$IosGCAchievementsResetResponse$error(void* e);
 void* __swift_bridge__$IosGCScoreSubmitResponse$done(void);
 void* __swift_bridge__$IosGCScoreSubmitResponse$error(void* e);
-void* __swift_bridge__$IosGCLeaderboardFetchScoresResponse$done(int32_t score);
+void* __swift_bridge__$IosGCLeaderboardFetchScoresResponse$done(int32_t score, int32_t rank);
 void* __swift_bridge__$IosGCLeaderboardFetchScoresResponse$error(void* e);
+void* __swift_bridge__$IosGCLeaderboardScore$new(void* player_id, void* player_display_name, int32_t score, int32_t rank);
+void* __swift_bridge__$IosGCLeaderboardFetchScoreRangeResponse$done(void* scores);
+void* __swift_bridge__$IosGCLeaderboardFetchScoreRangeResponse$error(void* e);
 void* __swift_bridge__$IosGCDeleteSaveGameResponse$done(void* e);
 void* __swift_bridge__$IosGCDeleteSaveGameResponse$error(void* e);
 void* __swift_bridge__$IosGCFetchItemsForSignatureVerification$new(void* url, void* signature_as_base64, void* salt_as_base64, uint64_t timestamp);
@@ -234,6 +261,7 @@ void __swift_bridge__$receive_achievement_progress(int64_t request, void* respon
 void __swift_bridge__$receive_achievement_reset(int64_t request, void* response);
 void __swift_bridge__$receive_leaderboard_score(int64_t request, void* response);
 void __swift_bridge__$receive_fetch_leaderboard_score(int64_t request, void* response);
+void __swift_bridge__$receive_fetch_leaderboard_score_range(int64_t request, void* response);
 void __swift_bridge__$receive_items_for_signature_verification(int64_t request, void* response);
 void __swift_bridge__$receive_resolved_conflicts(int64_t request, void* response);
 void __swift_bridge__$receive_conflicting_savegames(void* savegames);

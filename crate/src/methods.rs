@@ -98,7 +98,7 @@ pub fn achievements_reset(request: i64) {
 
 /// Submits score to a leaderboard
 /// Expected to be confirmed with [`IosGamecenterEvents::LeaderboardScoreSubmitted`][crate::IosGamecenterEvents::LeaderboardScoreSubmitted] event
-pub fn leaderboards_score(request: i64, id: String, score: i64, context: i64) {
+pub fn submit_leaderboards_score(request: i64, id: String, score: i64, context: i64) {
     #[cfg(target_os = "ios")]
     native::leaderboards_score(request, id, score, context);
 }
@@ -108,6 +108,13 @@ pub fn leaderboards_score(request: i64, id: String, score: i64, context: i64) {
 pub fn fetch_leaderboard_score(request: i64, id: String) {
     #[cfg(target_os = "ios")]
     native::fetch_leaderboard_score(request, id);
+}
+
+/// Fetches a range of scores from a leaderboard
+/// Expected to be confirmed with [`IosGamecenterEvents::LeaderboardScoreRangeFetched`][crate::IosGamecenterEvents::LeaderboardScoreRangeFetched] event
+pub fn fetch_leaderboard_score_range(request: i64, leaderboard_name: String, min: i32, max: i32) {
+    #[cfg(target_os = "ios")]
+    native::fetch_leaderboard_score_range(request, leaderboard_name, min, max);
 }
 
 /// Opens Gamecenter View to a specific [`IosGCViewState`]

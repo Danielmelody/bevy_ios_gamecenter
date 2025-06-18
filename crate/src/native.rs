@@ -11,9 +11,10 @@ use crate::{
     plugin::IosGamecenterEvents, IosGCAchievement, IosGCAchievementProgressResponse,
     IosGCAchievementsResetResponse, IosGCAuthResult, IosGCDeleteSaveGameResponse,
     IosGCFetchItemsForSignatureVerification, IosGCFetchItemsForSignatureVerificationResponse,
-    IosGCLeaderboardFetchScoresResponse, IosGCLoadGamesResponse, IosGCPlayer,
-    IosGCResolvedConflictsResponse, IosGCSaveGame, IosGCSaveGames, IosGCSaveGamesResponse,
-    IosGCSavedGameResponse, IosGCScoreSubmitResponse,
+    IosGCLeaderboardFetchScoreRangeResponse, IosGCLeaderboardFetchScoresResponse,
+    IosGCLeaderboardScore, IosGCLoadGamesResponse, IosGCPlayer, IosGCResolvedConflictsResponse,
+    IosGCSaveGame, IosGCSaveGames, IosGCSaveGamesResponse, IosGCSavedGameResponse,
+    IosGCScoreSubmitResponse,
 };
 
 #[swift_bridge::bridge]
@@ -104,9 +105,26 @@ mod ffi {
         type IosGCLeaderboardFetchScoresResponse;
 
         #[swift_bridge(associated_to = IosGCLeaderboardFetchScoresResponse)]
-        fn done(score: i32) -> IosGCLeaderboardFetchScoresResponse;
+        fn done(score: i32, rank: i32) -> IosGCLeaderboardFetchScoresResponse;
         #[swift_bridge(associated_to = IosGCLeaderboardFetchScoresResponse)]
         fn error(e: String) -> IosGCLeaderboardFetchScoresResponse;
+
+        type IosGCLeaderboardScore;
+
+        #[swift_bridge(associated_to = IosGCLeaderboardScore)]
+        fn new(
+            player_id: String,
+            player_display_name: String,
+            score: i32,
+            rank: i32,
+        ) -> IosGCLeaderboardScore;
+
+        type IosGCLeaderboardFetchScoreRangeResponse;
+
+        #[swift_bridge(associated_to = IosGCLeaderboardFetchScoreRangeResponse)]
+        fn done(scores: Vec<IosGCLeaderboardScore>) -> IosGCLeaderboardFetchScoreRangeResponse;
+        #[swift_bridge(associated_to = IosGCLeaderboardFetchScoreRangeResponse)]
+        fn error(e: String) -> IosGCLeaderboardFetchScoreRangeResponse;
 
         type IosGCDeleteSaveGameResponse;
 
@@ -161,6 +179,10 @@ mod ffi {
             request: i64,
             response: IosGCLeaderboardFetchScoresResponse,
         );
+        fn receive_fetch_leaderboard_score_range(
+            request: i64,
+            response: IosGCLeaderboardFetchScoreRangeResponse,
+        );
         fn receive_items_for_signature_verification(
             request: i64,
             response: IosGCFetchItemsForSignatureVerificationResponse,
@@ -186,6 +208,12 @@ mod ffi {
         pub fn reset_achievements(request: i64);
         pub fn leaderboards_score(request: i64, id: String, score: i64, context: i64);
         pub fn fetch_leaderboard_score(request: i64, id: String);
+        pub fn fetch_leaderboard_score_range(
+            request: i64,
+            leaderboard_name: String,
+            min: i32,
+            max: i32,
+        );
         pub fn fetch_signature(request: i64);
     }
 }
@@ -291,6 +319,16 @@ fn receive_fetch_leaderboard_score(request: i64, response: IosGCLeaderboardFetch
         .send(IosGamecenterEvents::LeaderboardScoreFetched((
             request, response,
         )));
+}
+
+fn receive_fetch_leaderboard_score_range(
+    request: i64,
+    response: IosGCLeaderboardFetchScoreRangeResponse,
+) {
+    #[cfg(target_os = "ios")]
+    SENDER.get().unwrap().as_ref().unwrap().send(
+        IosGamecenterEvents::LeaderboardScoreRangeFetched((request, response)),
+    );
 }
 
 fn receive_deleted_game(request: i64, response: IosGCDeleteSaveGameResponse) {

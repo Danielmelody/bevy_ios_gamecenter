@@ -135,10 +135,10 @@ fn ios_gamecenter_ui(ui: &mut egui::Ui, res: &mut ResMut<DebugIosGamecenter>) {
         for id in &res.test_ranking_ids {
             ui.collapsing(id, |ui| {
                 if ui.button("submit score = 1").clicked() {
-                    bevy_ios_gamecenter::leaderboards_score(-1, id.clone(), 1, 2);
+                    bevy_ios_gamecenter::submit_leaderboards_score(-1, id.clone(), 1, 2);
                 }
                 if ui.button("submit score = 100").clicked() {
-                    bevy_ios_gamecenter::leaderboards_score(-1, id.clone(), 100, 2);
+                    bevy_ios_gamecenter::submit_leaderboards_score(-1, id.clone(), 100, 2);
                 }
             });
         }

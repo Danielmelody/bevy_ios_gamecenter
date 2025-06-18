@@ -5,9 +5,9 @@ mod request;
 
 use bevy_ecs::event::Event;
 pub use methods::{
-    achievement_progress, achievements_reset, authenticate, delete_savegame, fetch_save_games,
-    fetch_signature, init_listeners, leaderboards_score, load_game, request_player,
-    resolve_conflicting_games, save_game, trigger_view,
+    achievement_progress, achievements_reset, authenticate, delete_savegame,
+    fetch_leaderboard_score_range, fetch_save_games, fetch_signature, init_listeners, load_game,
+    request_player, resolve_conflicting_games, save_game, submit_leaderboards_score, trigger_view,
 };
 pub use plugin::{IosGamecenterEvents, IosGamecenterPlugin};
 pub use request::{BevyIosGamecenter, BevyIosGamecenterSet};
@@ -249,7 +249,7 @@ impl IosGCAchievementsResetResponse {
     }
 }
 
-/// Expected event data in response to [`leaderboards_score`] method call.
+/// Expected event data in response to [`submit_leaderboards_score`] method call.
 /// See Event [`IosGamecenterEvents`]
 #[derive(Event, Debug, Clone)]
 pub enum IosGCScoreSubmitResponse {
@@ -269,13 +269,51 @@ impl IosGCScoreSubmitResponse {
 
 #[derive(Event, Debug, Clone)]
 pub enum IosGCLeaderboardFetchScoresResponse {
-    Done(i32),
+    Done { score: i32, rank: i32 },
     Error(String),
 }
 
 impl IosGCLeaderboardFetchScoresResponse {
-    fn done(score: i32) -> Self {
-        Self::Done(score)
+    fn done(score: i32, rank: i32) -> Self {
+        Self::Done { score, rank }
+    }
+
+    fn error(e: String) -> Self {
+        Self::Error(e)
+    }
+}
+
+/// Represents a leaderboard score entry with player information
+#[derive(Debug, Clone, Default)]
+pub struct IosGCLeaderboardScore {
+    pub player_id: String,
+    pub player_display_name: String,
+    pub score: i32,
+    pub rank: i32,
+}
+
+impl IosGCLeaderboardScore {
+    pub fn new(player_id: String, player_display_name: String, score: i32, rank: i32) -> Self {
+        Self {
+            player_id,
+            player_display_name,
+            score,
+            rank,
+        }
+    }
+}
+
+/// Expected event data in response to [`fetch_leaderboard_score_range`] method call.
+/// See Event [`IosGamecenterEvents`]
+#[derive(Event, Debug, Clone)]
+pub enum IosGCLeaderboardFetchScoreRangeResponse {
+    Done { scores: Vec<IosGCLeaderboardScore> },
+    Error(String),
+}
+
+impl IosGCLeaderboardFetchScoreRangeResponse {
+    fn done(scores: Vec<IosGCLeaderboardScore>) -> Self {
+        Self::Done { scores }
     }
 
     fn error(e: String) -> Self {

@@ -100,7 +100,7 @@ fn bevy_system(mut gc: BevyIosGamecenter) {
     gc.load_game(save_game);
 
     // update leaderboard score
-    gc.leaderboards_score(
+    gc.submit_leaderboards_score(
         "raking id".into(),
         // score
         1,
