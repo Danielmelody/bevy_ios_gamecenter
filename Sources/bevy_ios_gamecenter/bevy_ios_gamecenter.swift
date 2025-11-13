@@ -42,77 +42,77 @@ public func receive_conflicting_savegames(_ savegames: IosGCSaveGames) {
     __swift_bridge__$receive_conflicting_savegames({savegames.isOwned = false; return savegames.ptr;}())
 }
 @_cdecl("__swift_bridge__$init_listeners")
-public func __swift_bridge__init_listeners () {
+public public public public func __swift_bridge__init_listeners () {
     init_listeners()
 }
 
 @_cdecl("__swift_bridge__$trigger_view")
-public func __swift_bridge__trigger_view (_ state: Int32) {
+public public public public func __swift_bridge__trigger_view (_ state: Int32) {
     trigger_view(state: state)
 }
 
 @_cdecl("__swift_bridge__$authenticate")
-public func __swift_bridge__authenticate (_ request: Int64) {
+public public public public func __swift_bridge__authenticate (_ request: Int64) {
     authenticate(request: request)
 }
 
 @_cdecl("__swift_bridge__$get_player")
-public func __swift_bridge__get_player (_ request: Int64) {
+public public public public func __swift_bridge__get_player (_ request: Int64) {
     get_player(request: request)
 }
 
 @_cdecl("__swift_bridge__$save_game")
-public func __swift_bridge__save_game (_ request: Int64, _ data: UnsafeMutableRawPointer, _ name: UnsafeMutableRawPointer) {
+public public public public func __swift_bridge__save_game (_ request: Int64, _ data: UnsafeMutableRawPointer, _ name: UnsafeMutableRawPointer) {
     save_game(request: request, data: RustString(ptr: data), name: RustString(ptr: name))
 }
 
 @_cdecl("__swift_bridge__$load_game")
-public func __swift_bridge__load_game (_ request: Int64, _ save_game: UnsafeMutableRawPointer) {
+public public public public func __swift_bridge__load_game (_ request: Int64, _ save_game: UnsafeMutableRawPointer) {
     load_game(request: request, save_game: IosGCSaveGame(ptr: save_game))
 }
 
 @_cdecl("__swift_bridge__$delete_game")
-public func __swift_bridge__delete_game (_ request: Int64, _ name: UnsafeMutableRawPointer) {
+public public public public func __swift_bridge__delete_game (_ request: Int64, _ name: UnsafeMutableRawPointer) {
     delete_game(request: request, name: RustString(ptr: name))
 }
 
 @_cdecl("__swift_bridge__$resolve_conflicting_games")
-public func __swift_bridge__resolve_conflicting_games (_ request: Int64, _ save_games: UnsafeMutableRawPointer, _ data: UnsafeMutableRawPointer) {
+public public public public func __swift_bridge__resolve_conflicting_games (_ request: Int64, _ save_games: UnsafeMutableRawPointer, _ data: UnsafeMutableRawPointer) {
     resolve_conflicting_games(request: request, save_games: IosGCSaveGames(ptr: save_games), data: RustString(ptr: data))
 }
 
 @_cdecl("__swift_bridge__$fetch_save_games")
-public func __swift_bridge__fetch_save_games (_ request: Int64) {
+public public public public func __swift_bridge__fetch_save_games (_ request: Int64) {
     fetch_save_games(request: request)
 }
 
 @_cdecl("__swift_bridge__$achievement_progress")
-public func __swift_bridge__achievement_progress (_ request: Int64, _ id: UnsafeMutableRawPointer, _ progress: Double) {
+public public public public func __swift_bridge__achievement_progress (_ request: Int64, _ id: UnsafeMutableRawPointer, _ progress: Double) {
     achievement_progress(request: request, id: RustString(ptr: id), progress: progress)
 }
 
 @_cdecl("__swift_bridge__$reset_achievements")
-public func __swift_bridge__reset_achievements (_ request: Int64) {
+public public public public func __swift_bridge__reset_achievements (_ request: Int64) {
     reset_achievements(request: request)
 }
 
 @_cdecl("__swift_bridge__$leaderboards_score")
-public func __swift_bridge__leaderboards_score (_ request: Int64, _ id: UnsafeMutableRawPointer, _ score: Int64, _ context: Int64) {
+public public public public func __swift_bridge__leaderboards_score (_ request: Int64, _ id: UnsafeMutableRawPointer, _ score: Int64, _ context: Int64) {
     leaderboards_score(request: request, id: RustString(ptr: id), score: score, context: context)
 }
 
 @_cdecl("__swift_bridge__$fetch_leaderboard_score")
-public func __swift_bridge__fetch_leaderboard_score (_ request: Int64, _ id: UnsafeMutableRawPointer) {
+public public public public func __swift_bridge__fetch_leaderboard_score (_ request: Int64, _ id: UnsafeMutableRawPointer) {
     fetch_leaderboard_score(request: request, id: RustString(ptr: id))
 }
 
 @_cdecl("__swift_bridge__$fetch_leaderboard_score_range")
-public func __swift_bridge__fetch_leaderboard_score_range (_ request: Int64, _ leaderboard_name: UnsafeMutableRawPointer, _ min: Int32, _ max: Int32) {
+public public public public func __swift_bridge__fetch_leaderboard_score_range (_ request: Int64, _ leaderboard_name: UnsafeMutableRawPointer, _ min: Int32, _ max: Int32) {
     fetch_leaderboard_score_range(request: request, leaderboard_name: RustString(ptr: leaderboard_name), min: min, max: max)
 }
 
 @_cdecl("__swift_bridge__$fetch_signature")
-public func __swift_bridge__fetch_signature (_ request: Int64) {
+public public public public func __swift_bridge__fetch_signature (_ request: Int64) {
     fetch_signature(request: request)
 }
 

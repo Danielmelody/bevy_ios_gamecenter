@@ -20,7 +20,7 @@ jobs:
     - uses: extractions/setup-just@v1
 
     - name: Add iOS targets
-      run: rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
+      run: rustup target add aarch64-apple-ios
 
     - name: Rust Cache
       uses: Swatinem/rust-cache@v2
